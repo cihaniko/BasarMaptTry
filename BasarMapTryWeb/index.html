@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>BasarMapTries </title>
+    <meta charset="utf-8"/>
+    <link href="src/style.css" rel="stylesheet"/>
+    <script src="src/jquery-1.9.1.min.js"></script>
+    <script src="src/jquery-1.9.1.js"></script>
+    <script src="src/bootstrap.js"></script>
+    <script src="src/bootstrap.min.js"></script>
+    
+    <link href="src/leaflet.css" rel="stylesheet" />
+    <script src="src/leaflet.js"></script>
+    
+    
+</head>
+<body>
+<div id="map">
+    <script>
+        var map = L.map('map').setView([40.65147, 29.25663], 7);
+        var basarLayer=new L.TileLayer("http://bms.basarsoft.com.tr/Service/api/v1/map/ProMap?accId=M6_gfCCQlEmJZi4fNWNN-g&appCode=xaNH2qyi7kqDUm3bjQvhfQ&x={x}&y={y}&z={z}", {
+            attribution: "&copy; <a href='http://www.basarsoft.com.tr'>Başarsoft</a> contributors",
+            maxZoom:18
+        }).addTo(map);
+        
+
+    </script>
+</div>
+<div id="search">
+    <!--<input type="text" name="search" placeholder="Search..">-->
+    <form novalidate="novalidate" onsubmit="return false;" class="searchbox sbx-custom">
+        <div role="search" class="sbx-custom__wrapper">
+            <input type="search" name="search" placeholder="Search your website" autocomplete="off" required="required" class="sbx-custom__input">
+            <button type="submit" title="Submit your search query." class="sbx-custom__submit">
+                <svg role="img" aria-label="Search">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-search-18"></use>
+                </svg>
+            </button>
+            <button type="reset" title="Clear the search query." class="sbx-custom__reset">
+                <svg role="img" aria-label="Reset">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-clear-5"></use>
+                </svg>
+            </button>
+        </div>
+    </form>
+</div>
+    <script type="text/javascript">
+  document.querySelector('.searchbox [type="reset"]').addEventListener('click', function() {  this.parentNode.querySelector('input').focus();});
+    </script>
+</body>
+</html>

@@ -23,7 +23,7 @@ namespace BasarMapTry
         private static void iller()
         {
 
-            var h = Mitab.mitab_c_open(@"..\..\data\IL.TAB");
+            var h = Mitab.mitab_c_open(@"C:\Users\Hkn\Documents\visual studio 2015\Projects\BasarMapTry\BasarMapTry\data\IL.TAB");
             var c= new MitabColumns(h);
             var featureId = Mitab.mitab_c_next_feature_id(h, -1);
 
