@@ -11,6 +11,8 @@ namespace BasarMapTry
         static void Main(string[] args)
         {
             var a = 5;
+            var b = "asd";
+
         }
     }
 }
