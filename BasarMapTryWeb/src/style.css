@@ -1,9 +1,11 @@
 ﻿body {
+    
 }
 #map {
             position: absolute;
-            top: 0;
+            top: 57px;
             bottom: 0;
+    float: left;
             width: 100%;
 }
 /*Search Box*/
