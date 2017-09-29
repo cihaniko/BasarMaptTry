@@ -54,15 +54,65 @@
     <Compile Include="Mitab.cs" />
     <Compile Include="models\GeoPointBson.cs" />
     <Compile Include="models\Il.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="bin\Debug\BasarMapTry.exe.config" />
+    <None Include="bin\Debug\BasarMapTry.vshost.exe.config" />
+    <None Include="bin\Debug\BasarMapTry.vshost.exe.manifest" />
+    <None Include="bin\Release\BasarMapTry.exe.config" />
+    <None Include="bin\Release\BasarMapTry.vshost.exe.config" />
+    <None Include="bin\Release\BasarMapTry.vshost.exe.manifest" />
     <None Include="data\IL.DAT" />
     <None Include="data\IL.ID" />
     <None Include="data\IL.MAP" />
     <None Include="data\IL.TAB" />
+    <None Include="obj\Release\DesignTimeResolveAssemblyReferencesInput.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\BasarMapTry.exe" />
+    <Content Include="bin\Debug\BasarMapTry.pdb" />
+    <Content Include="bin\Debug\BasarMapTry.vshost.exe" />
+    <Content Include="bin\Debug\mitab.dll" />
+    <Content Include="bin\Debug\mitab64.dll" />
+    <Content Include="bin\Debug\MongoDB.Bson.dll" />
+    <Content Include="bin\Debug\MongoDB.Bson.xml" />
+    <Content Include="bin\Debug\MongoDB.Driver.Core.dll" />
+    <Content Include="bin\Debug\MongoDB.Driver.Core.xml" />
+    <Content Include="bin\Debug\MongoDB.Driver.dll" />
+    <Content Include="bin\Debug\MongoDB.Driver.xml" />
+    <Content Include="bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <Content Include="bin\Release\BasarMapTry.exe" />
+    <Content Include="bin\Release\BasarMapTry.pdb" />
+    <Content Include="bin\Release\BasarMapTry.vshost.exe" />
+    <Content Include="bin\Release\mitab.dll" />
+    <Content Include="bin\Release\mitab64.dll" />
+    <Content Include="bin\Release\MongoDB.Bson.dll" />
+    <Content Include="bin\Release\MongoDB.Bson.xml" />
+    <Content Include="bin\Release\MongoDB.Driver.Core.dll" />
+    <Content Include="bin\Release\MongoDB.Driver.Core.xml" />
+    <Content Include="bin\Release\MongoDB.Driver.dll" />
+    <Content Include="bin\Release\MongoDB.Driver.xml" />
+    <Content Include="bin\Release\System.Runtime.InteropServices.RuntimeInformation.dll" />
+    <Content Include="obj\Release\BasarMapTry.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Release\BasarMapTry.exe" />
+    <Content Include="obj\Release\BasarMapTry.pdb" />
+    <Content Include="src\bootstrap.js" />
+    <Content Include="src\bootstrap.min.js" />
+    <Content Include="src\jquery-1.9.1.js" />
+    <Content Include="src\leaflet.css" />
+    <Content Include="src\leaflet.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="obj\Release\TempPE\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

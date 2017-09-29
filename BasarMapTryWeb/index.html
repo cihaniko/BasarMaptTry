@@ -8,9 +8,10 @@
     <script src="src/jquery-1.9.1.js"></script>
     <script src="src/bootstrap.js"></script>
     <script src="src/bootstrap.min.js"></script>
-    
-    <link href="src/leaflet.css" rel="stylesheet" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
     <script src="src/leaflet.js"></script>
+    <link href="src/leaflet.css" rel="stylesheet" />
+    
     
     
 </head>
@@ -22,30 +23,95 @@
             attribution: "&copy; <a href='http://www.basarsoft.com.tr'>Başarsoft</a> contributors",
             maxZoom:18
         }).addTo(map);
+        var ilcoord;
+        var featureGroup = new L.FeatureGroup();
+        var deneme;
+        $('document').ready(function() {
         
+            $("#SearchButton").on('click', function (e) {
+                e.preventDefault();
+                var x = $('#searchText').val();
+                
+                $.ajax({
+                    url: '../api/Iller/GetAll2',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { IlAdi: x },
+                    success: function (data, textStatus, xhr) {
+                        console.log(data);
 
+                        ilcoord = data.Geo.coordinates;
+
+                        //deneme = toGeoJSON(ilcoord);
+
+
+
+                        //featureGroup.addLayer(ilcoord);
+                        //featureGroup.addTo(map);
+                        var yenicord=[];
+                        for (var i = 0; i < data.Geo.coordinates.length; i++) {
+
+                            for (var j = 0; j < data.Geo.coordinates[i].length; j++) {
+                                var mPolygon = [];
+                                for (var k = 0; k < data.Geo.coordinates[i][j].length; k++) {
+                                    mPolygon.push(data.Geo.coordinates[i][j][k].slice(0));
+                                }
+                                yenicord.push(mPolygon.slice(0));
+                            }
+                            var nPolygon = L.multiPolygon(yenicord, {
+                                color: "#fff"
+                                
+                                
+                            });
+                            nPolygon.addTo(featureGroup);
+
+                        }
+
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error lan Error' + xhr + errorThrown);
+                    }
+                    
+                });
+                
+                
+            });
+
+            
+            
+
+           
+
+        });
+
+
+
+             
+            
+           
+        
     </script>
 </div>
 <div id="search">
-    <!--<input type="text" name="search" placeholder="Search..">-->
-    <form novalidate="novalidate" onsubmit="return false;" class="searchbox sbx-custom">
-        <div role="search" class="sbx-custom__wrapper">
-            <input type="search" name="search" placeholder="Search your website" autocomplete="off" required="required" class="sbx-custom__input">
-            <button type="submit" title="Submit your search query." class="sbx-custom__submit">
-                <svg role="img" aria-label="Search">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-search-18"></use>
-                </svg>
-            </button>
-            <button type="reset" title="Clear the search query." class="sbx-custom__reset">
-                <svg role="img" aria-label="Reset">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-clear-5"></use>
-                </svg>
-            </button>
+
+    <div class="box">
+        
+        <div class="container">
+            <form id="search">
+                <input type="text" id="searchText" />
+                <input type="submit" id="SearchButton"  value="SearchButton" />
+            </form>
         </div>
-    </form>
-</div>
-    <script type="text/javascript">
-                document.querySelector('.searchbox [type="reset"]').addEventListener('click', function() {  this.parentNode.querySelector('input').focus();});
-    </script>
+    
+    </div>
+    </div>
+<!--<script type="text/javascript">
+    
+    //      document.querySelector('.searchbox [type="reset"]').addEventListener('click', function () {
+           
+    //      this.parentNode.querySelector('input').focus();
+    //});
+</script>-->
 </body>
 </html>
