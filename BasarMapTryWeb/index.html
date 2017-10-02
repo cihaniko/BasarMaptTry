@@ -3,110 +3,178 @@
 <head>
     <title>BasarMapTries </title>
     <meta charset="utf-8"/>
-    <link href="src/style.css" rel="stylesheet"/>
-    <script src="src/jquery-1.9.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="src/jquery-1.9.1.js"></script>
+    <script src="src/jquery-1.9.1.min.js"></script>
     <script src="src/bootstrap.js"></script>
     <script src="src/bootstrap.min.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
     <script src="src/leaflet.js"></script>
     <link href="src/leaflet.css" rel="stylesheet" />
-    
-    
+    <link href="src/style.css" rel="stylesheet" />
+   
     
 </head>
 <body>
 <div id="map">
     <script>
+     
         var map = L.map('map').setView([40.65147, 29.25663], 7);
-        var basarLayer=new L.TileLayer("http://bms.basarsoft.com.tr/Service/api/v1/map/ProMap?accId=M6_gfCCQlEmJZi4fNWNN-g&appCode=xaNH2qyi7kqDUm3bjQvhfQ&x={x}&y={y}&z={z}", {
+        var basarLayer = new L.TileLayer("http://bms.basarsoft.com.tr/Service/api/v1/map/ProMap?accId=M6_gfCCQlEmJZi4fNWNN-g&appCode=xaNH2qyi7kqDUm3bjQvhfQ&x={x}&y={y}&z={z}", {
             attribution: "&copy; <a href='http://www.basarsoft.com.tr'>Başarsoft</a> contributors",
-            maxZoom:18
+            maxZoom: 18
         }).addTo(map);
         var ilcoord;
         var featureGroup = new L.FeatureGroup();
         var deneme;
+        var nPolygon;
         featureGroup.addTo(map);
+
+        var customPopup = 
+                           "<ul class='nav nav-pills'>" +
+                                    "<li class='active'><a data-toggle='pill' href='#home'>Home</a></li>" +
+                                    "<li><a data-toggle='pill' href='#menu1'>Menu 1</a></li>" +
+                                    "</ul>" +
+    
+                             "<div class='tab-content'>"+
+                                   "<div id='home' class='tab-pane fade in active'>"+
+                                        "<table style='border=1px'>" +
+                                                "<tr>" +
+                                                    "<th>İL ADI</th>" +
+                                                    "<th>NUFUSU</th>" +
+                                                    "<th>IDARI ID</th>" +
+                                                "</tr> " +
+                                                "<tr>" +
+                                                    "<td>DENEME</td>" +
+                                                    "<td>Griffin</td>" +
+                                                    "<td>$100</td>" +
+                                                "</tr> " +
+                                        "</table>" +
+                                    "</div>" +
+                                    "<div id='menu1' class='tab-pane fade '>"+
+                                        "<table style='border=1px'>" +
+                                                "<tr>" +
+                                                    "<th>İL ADI</th>" +
+                                                    "<th>NUFUSU</th>" +
+                                                    "<th>IDARI ID</th>" +
+                                                "</tr> " +
+                                                "<tr>" +
+                                                    "<td>DENEME</td>" +
+                                                    "<td>Griffin</td>" +
+                                                    "<td>$100</td>" +
+                                                "</tr> " +
+                                        "</table>" +
+                                    "</div>" +
+                                "</div>" +
+                            "<br/>" +
+                                 
+                                   
+                            
+                              
+                            "<input type='button' class='buttonpop' value='Kaydet'> <input type='button' class='buttonpopexit' value='Kaydet'>";
+
+
         $('document').ready(function() {
-        
-            $("#SearchButton").on('click', function (e) {
+
+            $("#SearchButton").on('click', function(e) {
+
                 e.preventDefault();
                 var x = $('#searchText').val();
-                
-                $.ajax({
-                    url: '../api/Iller/GetAll2',
-                    type: 'GET',
-                    dataType: 'json',
-                    data: { IlAdi: x },
-                    success: function (data, textStatus, xhr) {
-                        console.log(data);
+                if (x != null) {
+                    featureGroup.onRemove(map);
+                    $.ajax({
+                        url: '../api/Iller/GetAll2',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: { IlAdi: x },
+                        success: function(data, textStatus, xhr) {
+                            console.log(data);
 
-                        ilcoord = data.Geo.coordinates;
-
-                        //deneme = toGeoJSON(ilcoord);
-
+                            ilcoord = data.Geo.coordinates;
 
 
-                        //featureGroup.addLayer(ilcoord);
-                        //featureGroup.addTo(map);
-                        var yenicord=[];
-                        for (var i = 0; i < data.Geo.coordinates.length; i++) {
+                            var yenicord = [];
 
-                            for (var j = 0; j < data.Geo.coordinates[i].length; j++) {
-                                var mPolygon = [];
-                                for (var k = 0; k < data.Geo.coordinates[i][j].length; k++) {
-                                    mPolygon.push(data.Geo.coordinates[i][j][k].slice(0));
+                            for (var i = 0; i < data.Geo.coordinates.length; i++) {
+
+                                for (var j = 0; j < data.Geo.coordinates[i].length; j++) {
+                                    var mPolygon = [];
+                                    for (var k = 0; k < data.Geo.coordinates[i][j].length; k++) {
+                                        var a = data.Geo.coordinates[i][j][k].slice(0).reverse();
+                                        mPolygon.push(a);
+                                    }
+                                    yenicord.push(mPolygon.slice(0));
                                 }
-                                yenicord.push(mPolygon.slice(0));
-                            }
-                            var nPolygon = L.multiPolygon(yenicord, {
-                                color: "#fff"
-                                
-                                
-                            });
-                            nPolygon.addTo(featureGroup);
+                                nPolygon = L.polygon(yenicord, {
+                                    color: 'red'
 
+
+                                }).bindPopup(customPopup
+                                );
+
+
+                            }
+                            featureGroup.addLayer(nPolygon);
+
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            console.log('Error lan Error' + xhr + errorThrown);
+                            swal(
+                                'Oops...',
+                                'Malesef Böyle bir il yok !',
+                                'error'
+                            );
                         }
 
+                    });
+                }
 
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        console.log('Error lan Error' + xhr + errorThrown);
-                    }
-                    
-                });
-                
-                
+
             });
 
-            
-            
-
-           
 
         });
 
-
-
-             
-            
-           
-        
+     
     </script>
+</div>
+<div id="myPopup" class="modal">
+    <div class="popup-header">
+        <h1> İl Bilgileri </h1>
+        <span class="close">&times;</span>
+    </div>
+  
+    <div class="popup-Content">
+        <table>
+            <tr>
+                <td>
+                    <p>Deneme1</p>
+                </td>
+                <td>
+                    <p>deneme2</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
 </div>
 <div id="search">
 
     <div class="box">
-        
+
         <div class="container">
             <form id="search">
-                <input type="text" id="searchText" />
-                <input type="submit" id="SearchButton"  value="SearchButton" />
+                <input type="text" id="searchText"/>
+                <input type="submit" id="SearchButton" value="SearchButton"/>
             </form>
         </div>
-    
+
     </div>
-    </div>
+
+</div>
 <!--<script type="text/javascript">
     
     //      document.querySelector('.searchbox [type="reset"]').addEventListener('click', function () {

@@ -157,6 +157,7 @@
     <Content Include="bin\System.Web.Http.WebHost.dll" />
     <Content Include="bin\System.Web.Http.WebHost.xml" />
     <Content Include="bin\System.Web.Http.xml" />
+    <Content Include="deneme.html" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="obj\Debug\BasarMapTryWeb.csproj.FileListAbsolute.txt" />
