@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
     <script src="src/leaflet.js"></script>
     <script src="src/leaflet.toolbar.js"></script>
+    
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>-->
     <link href="src/Leaflet.draw-master/Leaflet.draw-master/src/leaflet.draw.css" rel="stylesheet" />
@@ -22,23 +23,29 @@
     <link href="src/style.css" rel="stylesheet" />
     <script src="https://unpkg.com/leaflet.markercluster@1.1.0/dist/leaflet.markercluster.js"></script>
     <script src="src/leaflet.draw.js"></script>
-
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.2.3/leaflet.draw.js"></script>-->
 
 </head>
 <body>
 
-    <div id="map">
-        <script>
-
+<div id="map">
+    <script>
+        var delikli = [];
+        var deliklidenem;
+        var polyIlk=[];
+        var polyOther=[];
         var map = L.map('map').setView([40.65147, 29.25663], 7);
         var basarLayer = new L.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution: "&copy; <a href='http://www.basarsoft.com.tr'>Başarsoft</a> contributors",
-            maxZoom: 30
+            maxZoom: 30,
+
         }).addTo(map);
         var featureGroup = new L.FeatureGroup();
         featureGroup.addTo(map);
         var editableLayers = new L.FeatureGroup();
         map.addLayer(editableLayers);
+
+        
 
         drawnItems = L.featureGroup().addTo(map);
         L.control.layers({
@@ -53,37 +60,118 @@
             edit: {
                 featureGroup: drawnItems,
                 poly: {
-                    allowIntersection: false
+                    allowIntersection: false,
+
                 }
             },
             draw: {
                 polygon: {
                     allowIntersection: true,
-                    showArea: true
+                    showArea: true,
+                    color: '#ffffff',
+                    shapeOptions: {
+                        color: '#000000'
+                    }
                 },
                 polyline: false
             }
         }));
+
+        
+
         map.on(L.Draw.Event.CREATED, function(event) {
             var layer = event.layer;
             drawnItems.addLayer(layer);
             collection = drawnItems.toGeoJSON();
-            console.log(collection);
-        });
 
-        scotland = L.polygon([[[60, -13], [60, 0], [50, 4], [50, -13]],
-                  [[55.7, -4.5], [56, -4.5], [56, -4], [55.7, -4]]]);
-        console.log(scotland);
+            
+            $("#polyciz").click(function () {
+                featureGroup.onRemove(map);
+                console.log(collection);
+                if (collection.features.length > 1) {
+
+                    for (var i = 0; i < collection.features.length; i++) {
+
+                        for (var k = 0; k < collection.features[0].geometry.coordinates.length; k++) {
+
+                            polyIlk = [];
+
+                            for (var j = 0; j < collection.features[i].geometry.coordinates[k].length; j++) {
+
+                                var reverseGeo = collection.features[i].geometry.coordinates[k][j].reverse();
+                                polyIlk.push(reverseGeo);
+
+                            }
+                            polyIlk.push(collection.features[i].geometry.coordinates[k][j - 1].reverse());
+                            polyOther.push([polyIlk.slice(0)]);
+                        }
+
+
+                    }
+                    delikli = L.polygon(polyOther, {
+                        color:'black'
+                    });
+                    featureGroup.addLayer(delikli);
+                }
+            });
+            
+
+
+            //if (collection.features.length == 2) {
+            //    var dontrevers = collection.features[0].geometry.coordinates[0][0].reverse();
+            //    var ana1 = collection.features[0].geometry.coordinates;
+            //    var delik = collection.features[1].geometry.coordinates;
+            //    delikli = [ana1, delik];
+            //    deliklidenem = L.polygon(delikli);
+            //    console.log(deliklidenem);
+            //    featureGroup.addLayer(deliklidenem);
+            //}
+          
+            
+
+        });
+        
+
+        scotland = L.polygon([
+            [[60, -13], [60, 0], [50, 4], [50, -13]],
+            [[55.7, -4.5], [56, -4.5], [56, -4], [55.7, -4]]
+        ]);
+      
         scotland.addTo(map);
         var denemegeo = scotland.toGeoJSON();
-        console.log(denemegeo);
+        
 
-//map.on('draw:created', function (e) {
-        //    dizi = new Array();
+        //map.on('draw:drawstop', function (e) {
         //    collection = drawnItems.toGeoJSON();
+        //    console.log(collection);
+        //    featureGroup.onRemove(map);
+        //    delikli = [];
+        //        if (collection.features.length > 1) {
+                   
+        //            for (var i = 0; i < collection.features.length; i++) {
+
+        //                for (var k = 0; k < collection.features[0].geometry.coordinates.length; k++) {
+
+        //                    polyIlk = [];
+
+        //                    for (var j = 0; j < collection.features[i].geometry.coordinates[k].length; j++) {
+
+        //                        var reverseGeo = collection.features[i].geometry.coordinates[k][j].reverse();
+        //                        polyIlk.push(reverseGeo);
+
+        //                    }
+        //                    polyIlk.push(collection.features[i].geometry.coordinates[k][j - 1].reverse());
+        //                    polyOther.push([polyIlk.slice(0)]);
+        //                }
 
 
-//    console.log(collection);
+        //            }
+        //            delikli = L.polygon(polyOther);
+        //            featureGroup.addLayer(delikli);
+        //        }
+            
+
+        //     console.log(collection);
         //});
         //map.on('draw:editing', function (e) {
         //    var collection2 = drawnItems.toGeoJSON();
@@ -95,6 +183,7 @@
         //markers.addLayer(L.marker(getRandomLatLng(map)));
         ////... Add more layers ...
         //map.addLayer(markers);
+        
 
         function renk() {
             var renkli = { color: 'blue' }
@@ -176,8 +265,15 @@
 
         });
 
+      
+    </script>
+</div>
+<div class="container">
 
-        </script>
+    <div id="rightMenu">
+        <button type="button" class="btn btn-success" id="polyciz">Kaydet</button>
+
     </div>
+</div>
 </body>
 </html>

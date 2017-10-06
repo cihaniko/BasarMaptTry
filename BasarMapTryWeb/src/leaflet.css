@@ -79,7 +79,6 @@
 	-moz-box-sizing: border-box;
 	     box-sizing: border-box;
 	z-index: 800;
-    
 	}
 /* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
 .leaflet-overlay-pane svg {
@@ -549,8 +548,8 @@
 /* div icon */
 
 .leaflet-div-icon {
-	background: url(images/clickicon.png) no-repeat center;
-	
+	background: #fff;
+	border: 1px solid #666;
 	}
 
 
