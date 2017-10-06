@@ -14,12 +14,13 @@ namespace BasarMapTry
     {
         static void Main(string[] args)
         {
-            
 
-          //iller();
-         ilceler();
-         mahalleler();
-         Console.ReadLine();
+
+            // iller();
+            // ilceler();
+            // mahalleler();
+            // kapiNo();
+            Console.ReadLine();
 
         }
 
@@ -27,10 +28,10 @@ namespace BasarMapTry
         {
 
             var h = Mitab.mitab_c_open(@"C:\Users\Hkn\Documents\visual studio 2015\Projects\BasarMapTry\BasarMapTry\data\IL.TAB");
-            var c= new MitabColumns(h);
+            var c = new MitabColumns(h);
             var featureId = Mitab.mitab_c_next_feature_id(h, -1);
 
-            var client=new MongoClient();
+            var client = new MongoClient();
             var database = client.GetDatabase("test");
             var collection = database.GetCollection<Il>("Iller");
             collection.Indexes.CreateOneAsync("{ \"Geo\" : \"2dsphere\"}");
@@ -38,14 +39,14 @@ namespace BasarMapTry
             var s = 0;
             var hata = 0;
 
-            while (featureId!=-1)
+            while (featureId != -1)
             {
                 var feature = Mitab.mitab_c_read_feature(h, featureId);
                 var polygonCount = Mitab.mitab_c_get_parts(feature);
                 var ilAdi = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("ILADI").index);
                 var idariId = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("IDARIID").index);
                 var nufus = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("NUFUS").index);
-                var polygons=new BsonArray();
+                var polygons = new BsonArray();
                 var type = "";
                 for (var i = 0; i < polygonCount; i++)
                 {
@@ -92,14 +93,14 @@ namespace BasarMapTry
 
                 try
                 {
-                   
+
                     collection.InsertOneAsync(il);
                     //collection.InsertOne(il);
 
                     s++;
                     Console.WriteLine("eklenen il :" + s);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     hata++;
                     Console.WriteLine("hata");
@@ -133,9 +134,9 @@ namespace BasarMapTry
                 var ilAdi = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("ILADI").index);
                 var idariId = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("IDARIID").index);
                 var nufus = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("NUFUS").index);
-                var ustIdarıId= Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("USTIDARIID").index);
-                var tip= Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("TIP").index);
-                var tipKod= Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("TIPKOD").index);
+                var ustIdarıId = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("USTIDARIID").index);
+                var tip = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("TIP").index);
+                var tipKod = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("TIPKOD").index);
 
                 var polygons = new BsonArray();
                 var type = "";
@@ -174,7 +175,7 @@ namespace BasarMapTry
                     IdariId = Convert.ToInt32(idariId),
                     IlceAdi = ilceAdi,
                     IlAdi = ilAdi,
-                    Tip=tip,
+                    Tip = tip,
                     TipKod = Convert.ToInt32(tipKod),
                     Nufus = Convert.ToInt32(nufus),
                     Geo = new GeoPointBson()
@@ -190,7 +191,7 @@ namespace BasarMapTry
                     collection.InsertOneAsync(ilce);
                     s++;
                     Console.WriteLine("eklenen ilce :" + s);
-                    
+
                 }
                 catch
                 {
@@ -228,7 +229,7 @@ namespace BasarMapTry
                 var adi = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("ADI").index);
                 var adiAdr = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("ADIADR").index);
                 var tip = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("TIP").index);
-                var tipKod= Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("TIPKOD").index);
+                var tipKod = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("TIPKOD").index);
                 var postaKodu = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("POSTAKODU").index);
                 var nufus = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("NUFUS").index);
 
@@ -270,9 +271,9 @@ namespace BasarMapTry
                     IdariId = Convert.ToInt32(idariId),
                     IlceAdi = ilceAdi,
                     IlKod = Convert.ToInt32(ilKod),
-                    Adi=adi,
+                    Adi = adi,
                     AdiAdr = adiAdr,
-                    Tip=tip,
+                    Tip = tip,
                     TipKod = Convert.ToInt32(tipKod),
                     PostaKodu = Convert.ToInt32(postaKodu),
                     Nufus = Convert.ToInt32(nufus),
@@ -290,7 +291,7 @@ namespace BasarMapTry
                     collection.InsertOneAsync(mahalle);
                     s++;
                     Console.WriteLine("eklenen mahalle :" + s);
-                    
+
                 }
                 catch
                 {
@@ -301,7 +302,75 @@ namespace BasarMapTry
                 featureId = Mitab.mitab_c_next_feature_id(h, featureId);
             }
         }
-     }
+
+        private static void kapiNo()
+        {
+            var h = Mitab.mitab_c_open(@"C:\Users\Hkn\Documents\visual studio 2015\Projects\BasarMapTry\BasarMapTry\data\KapiNo.TAB");
+            var c = new MitabColumns(h);
+            var featureId = Mitab.mitab_c_next_feature_id(h, -1);
+
+            var client = new MongoClient();
+            var database = client.GetDatabase("test");
+            var collection = database.GetCollection<KapiNo>("KapiNo");
+            collection.Indexes.CreateOneAsync("{ \"Geo\" : \"2dsphere\"}");
+
+            var s = 0;
+            var hata = 0;
+
+            while (featureId != -1)
+            {
+                var feature = Mitab.mitab_c_read_feature(h, featureId);
+                //var polygonCount = Mitab.mitab_c_get_parts(feature);
+                var no = Mitab.mitab_c_get_field_as_string_csharp(feature, c.GetColumn("NO").index);
+
+                var points = new BsonArray();
+                var type = "";
+                var point = new BsonArray();
+
+                var coordinates = new BsonArray();
+                var lng = Mitab.mitab_c_get_vertex_x(feature, 0, 0);
+                var lat = Mitab.mitab_c_get_vertex_y(feature, 0, 0);
+
+                coordinates.Add(lng);
+                coordinates.Add(lat);
+                //point.Add(coordinates);
 
 
- }
+
+                type = "Point";
+
+
+
+                var kapiNo = new KapiNo
+                {
+                    No = no,
+                    Geo = new GeoPointBson()
+                    {
+                        type = type,
+                        coordinates = coordinates
+                    }
+
+                };
+
+                try
+                {
+
+                    collection.InsertOneAsync(kapiNo);
+                    //collection.InsertOne(il);
+
+                    s++;
+                    Console.WriteLine("eklenen kapi :" + s);
+                }
+                catch (Exception ex)
+                {
+                    hata++;
+                    Console.WriteLine("hata");
+                }
+                Mitab.mitab_c_destroy_feature(feature);
+                featureId = Mitab.mitab_c_next_feature_id(h, featureId);
+            }
+        }
+    }
+
+
+}

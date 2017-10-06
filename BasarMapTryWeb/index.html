@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>BasarMapTries </title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="src/jquery-1.9.1.js"></script>
@@ -15,78 +15,172 @@
     <script src="src/leaflet.js"></script>
     <link href="src/leaflet.css" rel="stylesheet" />
     <link href="src/style.css" rel="stylesheet" />
-   
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+
 </head>
 <body>
-<div id="map">
-    <script>
-     
+    <div id="map">
+        <script>
+
         var map = L.map('map').setView([40.65147, 29.25663], 7);
         var basarLayer = new L.TileLayer("http://bms.basarsoft.com.tr/Service/api/v1/map/ProMap?accId=M6_gfCCQlEmJZi4fNWNN-g&appCode=xaNH2qyi7kqDUm3bjQvhfQ&x={x}&y={y}&z={z}", {
             attribution: "&copy; <a href='http://www.basarsoft.com.tr'>Başarsoft</a> contributors",
-            maxZoom: 18
+            maxZoom: 30
+            //contextmenu:true,
+            //contextmenuWidth:140,
+
         }).addTo(map);
         var ilcoord;
         var featureGroup = new L.FeatureGroup();
         var deneme;
         var nPolygon;
         featureGroup.addTo(map);
+       function customPop(nufus,ilceadi,iladi) {
+           var customPopup =
+            "<ul class='nav nav-pills'>" +
+                "<li class='active'><a data-toggle='pill' href='#home'>Bilgiler</a></li>" +
+                "<li><a data-toggle='pill' href='#menu1'>Menu 1</a></li>" +
+                "</ul>" +
 
-        var customPopup = 
-                           "<ul class='nav nav-pills'>" +
-                                    "<li class='active'><a data-toggle='pill' href='#home'>Home</a></li>" +
-                                    "<li><a data-toggle='pill' href='#menu1'>Menu 1</a></li>" +
-                                    "</ul>" +
-    
-                             "<div class='tab-content'>"+
-                                   "<div id='home' class='tab-pane fade in active'>"+
-                                        "<table style='border=1px'>" +
-                                                "<tr>" +
-                                                    "<th>İL ADI</th>" +
-                                                    "<th>NUFUSU</th>" +
-                                                    "<th>IDARI ID</th>" +
-                                                "</tr> " +
-                                                "<tr>" +
-                                                    "<td>DENEME</td>" +
-                                                    "<td>Griffin</td>" +
-                                                    "<td>$100</td>" +
-                                                "</tr> " +
-                                        "</table>" +
-                                    "</div>" +
-                                    "<div id='menu1' class='tab-pane fade '>"+
-                                        "<table style='border=1px'>" +
-                                                "<tr>" +
-                                                    "<th>İL ADI</th>" +
-                                                    "<th>NUFUSU</th>" +
-                                                    "<th>IDARI ID</th>" +
-                                                "</tr> " +
-                                                "<tr>" +
-                                                    "<td>DENEME</td>" +
-                                                    "<td>Griffin</td>" +
-                                                    "<td>$100</td>" +
-                                                "</tr> " +
-                                        "</table>" +
-                                    "</div>" +
-                                "</div>" +
-                            "<br/>" +
-                                 
-                                   
-                            
-                              
-                            "<input type='button' class='buttonpop' value='Kaydet'> <input type='button' class='buttonpopexit' value='Kaydet'>";
+                "<div class='tab-content'>" +
+                "<div id='home' class='tab-pane fade in active'>" +
+                "<table style='border=1px'>" +
+                "<tr>" +
+                "<th>İL ADI</th>" +
+                "<th>NUFUSU</th>" +
+                "<th>İLÇE ADI</th>" +
+                "</tr> " +
+                "<tr>" +
+                "<td>"+iladi+"</td>" +
+                "<td>"+nufus+"</td>" +
+                "<td>"+ilceadi+"</td>" +
+                "</tr> " +
+                "</table>" +
+                "</div>" +
+                "<div id='menu1' class='tab-pane fade '>" +
+                "<table style='border=1px'>" +
+                "<tr>" +
+                "<th>İL ADI</th>" +
+                "<th>NUFUSU</th>" +
+                "<th>IDARI ID</th>" +
+                "</tr> " +
+                "<tr>" +
+                "<td>DENEME</td>" +
+                "<td>Griffin</td>" +
+                "<td>$100</td>" +
+                "</tr> " +
+                "</table>" +
+                "</div>" +
+                "</div>" +
+                "<br/>" +
 
+
+
+
+                "<input type='button' class='buttonpop' value='Kaydet'> <input type='button' class='buttonpopexit' value='Vazgeç'>";
+           return customPopup;
+       }
+       var customPopup =
+         "<ul class='nav nav-pills'>" +
+             "<li class='active'><a data-toggle='pill' href='#home'>Bilgiler</a></li>" +
+             "<li><a data-toggle='pill' href='#menu1'>Menu 1</a></li>" +
+             "</ul>" +
+
+             "<div class='tab-content'>" +
+             "<div id='home' class='tab-pane fade in active'>" +
+             "<table style='border=1px'>" +
+             "<tr>" +
+             "<th>İL ADI</th>" +
+             "<th>NUFUSU</th>" +
+             "<th>İLÇE ADI</th>" +
+             "</tr> " +
+             "<tr>" +
+             "<td></td>" +
+             "<td></td>" +
+             "<td> </td>" +
+             "</tr> " +
+             "</table>" +
+             "</div>" +
+             "<div id='menu1' class='tab-pane fade '>" +
+             "<table style='border=1px'>" +
+             "<tr>" +
+             "<th>İL ADI</th>" +
+             "<th>NUFUSU</th>" +
+             "<th>IDARI ID</th>" +
+             "</tr> " +
+             "<tr>" +
+             "<td>DENEME</td>" +
+             "<td>Griffin</td>" +
+             "<td>$100</td>" +
+             "</tr> " +
+             "</table>" +
+             "</div>" +
+             "</div>" +
+             "<br/>" +
+
+
+
+
+             "<input type='button' class='buttonpop' value='Kaydet'> <input type='button' class='buttonpopexit' value='Vazgeç'>";
+       //$(function () {
+       //    $('#the-node').contextMenu({
+       //        selector: 'div',
+       //        callback: function (key, options) {
+       //            var m = "clicked: " + key + " on " + $(this).text();
+       //            window.console && console.log(m) || alert(m);
+       //        },
+       //        items: {
+       //            "edit": { name: "Edit", icon: "edit" },
+       //            "cut": { name: "Cut", icon: "cut" },
+       //            "copy": { name: "Copy", icon: "copy" },
+       //            "paste": { name: "Paste", icon: "paste" },
+       //            "delete": { name: "Delete", icon: "delete" },
+       //            "sep1": "---------",
+       //            "quit": { name: "Quit", icon: function ($element, key, item) { return 'context-menu-icon context-menu-icon-quit'; } }
+       //        }
+       //    });
+       //});
 
         $('document').ready(function() {
 
-            $("#SearchButton").on('click', function(e) {
+            $.ajax({
+                url: '../api/Iller/GetAll',
+                type: 'GET',
+                dataType: 'json',
+
+                success: function(data, textStatus, xhr) {
+                    console.log(data);
+
+                    for (var i = 0; i < data.length; i++) {
+                        console.log(data.IlAdi);
+
+                            $('#myIller')
+                                .append($("<option></option>")
+                                .attr("value", data[i].IdariId)
+                                .text(data[i].IlAdi));
+
+                    };
+
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log('Error lan Error' + xhr + errorThrown);
+                    swal(
+                        'Oops...',
+                        'Malesef Böyle bir il yok ! ' + xhr,
+                        'error'
+                    );
+                }
+            });
+
+                $("#SearchButton").on('click', function(e) {
 
                 e.preventDefault();
                 var x = $('#searchText').val();
                 if (x != null) {
                     featureGroup.onRemove(map);
                     $.ajax({
-                        url: '../api/Iller/GetAll2',
+                        url: '../api/Iller/GetSearch',
                         type: 'GET',
                         dataType: 'json',
                         data: { IlAdi: x },
@@ -97,26 +191,50 @@
 
 
                             var yenicord = [];
+                            if (data.Geo.type == "MultiPolygon") {
+                                for (var i = 0; i < data.Geo.coordinates.length; i++) {
 
-                            for (var i = 0; i < data.Geo.coordinates.length; i++) {
-
-                                for (var j = 0; j < data.Geo.coordinates[i].length; j++) {
-                                    var mPolygon = [];
-                                    for (var k = 0; k < data.Geo.coordinates[i][j].length; k++) {
-                                        var a = data.Geo.coordinates[i][j][k].slice(0).reverse();
-                                        mPolygon.push(a);
+                                    for (var j = 0; j < data.Geo.coordinates[i].length; j++) {
+                                        var mPolygon = [];
+                                        for (var k = 0; k < data.Geo.coordinates[i][j].length; k++) {
+                                            var a = data.Geo.coordinates[i][j][k].reverse();
+                                            mPolygon.push(a);
+                                        }
+                                        yenicord.push(mPolygon.slice(0));
                                     }
-                                    yenicord.push(mPolygon.slice(0));
+                                    nPolygon = L.polygon(yenicord, {
+                                        color: 'red'
+
+
+                                    }).bindPopup(customPopup
+                                    );
+
+
                                 }
-                                nPolygon = L.polygon(yenicord, {
-                                    color: 'red'
-
-
-                                }).bindPopup(customPopup
-                                );
-
-
                             }
+                            else if (data.Geo.type == "Polygon") {
+                                var mPolygon = [];
+                                for (var i = 0; i < data.Geo.coordinates.length; i++) {
+
+                                    for (var j = 0; j < data.Geo.coordinates[i].length; j++) {
+
+
+                                            var a = data.Geo.coordinates[i][j].reverse();
+                                            mPolygon.push(a);
+
+                                        yenicord.push(mPolygon);
+                                    }
+                                    nPolygon = L.polygon(yenicord, {
+                                        color: 'red'
+
+
+                                    }).bindPopup(customPopup
+                                    );
+
+
+                                }
+                            }
+
                             featureGroup.addLayer(nPolygon);
 
                         },
@@ -124,7 +242,7 @@
                             console.log('Error lan Error' + xhr + errorThrown);
                             swal(
                                 'Oops...',
-                                'Malesef Böyle bir il yok !',
+                                'Malesef Böyle bir il yok ! '+xhr,
                                 'error'
                             );
                         }
@@ -135,52 +253,227 @@
 
             });
 
+                $('#myIller').on('change', function () {
+                    $('#myIlceler').empty();
+                    var b = { "UstIdariId": this.value };
+                    console.log(b);
+                    $.ajax({
+                        url: '../api/Iller/GetIlce',
+                        type: 'GET',
+                        dataType: 'json',
+                        data:b,
+                        success: function (data, textStatus, xhr) {
+                            console.log(data);
 
+                            for (var i = 0; i < data.length; i++) {
+                                console.log(data.IlceAdi);
+
+                                $('#myIlceler')
+                                    .append($("<option></option>")
+                                    .attr("value", data[i].IdariId)
+                                    .text(data[i].IlceAdi));
+
+                            };
+
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.log('Error lan Error' + xhr + errorThrown);
+                            swal(
+                                'Oops...',
+                                'Malesef Böyle bir seçim yok! ' + xhr,
+                                'error'
+                            );
+                        }
+                    });
+                });
+
+                $('#myIlceler').on('change', function () {
+                    $('#myMahalle').empty();
+                    var a = { "UstIdariId": this.value };
+                    console.log(a);
+                    $.ajax({
+                        url: '../api/Iller/GetMahalle',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: a,
+                        success: function (data, textStatus, xhr) {
+                            console.log(data);
+
+                            for (var i = 0; i < data.length; i++) {
+                                console.log(data.Adi);
+
+                                $('#myMahalle')
+                                    .append($("<option></option>")
+                                    .attr("value", data[i].IdariId)
+                                    .text(data[i].Adi));
+
+                            };
+
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.log('Error lan Error' + xhr + errorThrown);
+                            swal(
+                                'Oops...',
+                                'Malesef Böyle bir seçim yok! ' + xhr,
+                                'error'
+                            );
+                        }
+                    });
+                });
+
+                 $('#myMahalle').on('change', function() {
+                var secilenmah = this.value ;
+                featureGroup.onRemove(map);
+                $.ajax({
+                    url: '../api/Iller/GetMahalleDraw',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { IdariId: secilenmah },
+                    success: function(data, textStatus, xhr) {
+                        console.log(data);
+
+                     //   ilcoord = data.Geo.coordinates;
+
+
+                        var yenicord = [];
+                        if (data.Geo.type == "MultiPolygon") {
+                            for (var i = 0; i < data.Geo.coordinates.length; i++) {
+
+                                for (var j = 0; j < data.Geo.coordinates[i].length; j++) {
+                                    var mPolygon = [];
+                                    for (var k = 0; k < data.Geo.coordinates[i][j].length; k++) {
+                                        var a = data.Geo.coordinates[i][j][k].reverse();
+                                        mPolygon.push(a);
+                                    }
+                                    yenicord.push(mPolygon.slice(0));
+                                }
+                                nPolygon = L.polygon(yenicord, {
+                                    color: 'red'
+
+
+                                }).bindPopup(customPop(data.Nufus, data.IlceAdi, data.IlAdi)
+                                );
+
+
+                            }
+                        } else if (data.Geo.type == "Polygon") {
+                            var mPolygon = [];
+                            for (var i = 0; i < data.Geo.coordinates.length; i++) {
+
+                                for (var j = 0; j < data.Geo.coordinates[i].length; j++) {
+
+
+                                    var a = data.Geo.coordinates[i][j].reverse();
+                                    mPolygon.push(a);
+
+                                    yenicord.push(mPolygon);
+                                }
+                                nPolygon = L.polygon(yenicord, {
+                                    color: 'red'
+
+
+                                }).bindPopup(customPop(data.Nufus, data.IlceAdi,data.IlAdi)
+                                );
+
+
+                            }
+                        }
+                        //var setlat = data.Geo.coordinates[0][0][0];
+                        //var setlng = data.Geo.coordinates[0][0][1];
+
+                        //map.setView(new L.LatLng(setlat, setlng), 11);
+                        var bounds = nPolygon.getBounds();
+                        map.fitBounds(bounds);
+                        featureGroup.addLayer(nPolygon);
+
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.log('Error lan Error' + xhr + errorThrown);
+                        swal(
+                            'Oops...',
+                            'Malesef Böyle bir mahalle yok ! ' + xhr,
+                            'error'
+                        );
+                    }
+
+                });
+
+            });
         });
 
-     
-    </script>
-</div>
-<div id="myPopup" class="modal">
-    <div class="popup-header">
-        <h1> İl Bilgileri </h1>
-        <span class="close">&times;</span>
+
+        </script>
     </div>
-  
-    <div class="popup-Content">
-        <table>
-            <tr>
-                <td>
-                    <p>Deneme1</p>
-                </td>
-                <td>
-                    <p>deneme2</p>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <div id="myPopup" class="modal">
+        <div class="popup-header">
+            <h1> İl Bilgileri </h1>
+            <span class="close">&times;</span>
+        </div>
 
-</div>
-<div id="search">
-
-    <div class="box">
-
-        <div class="container">
-            <form id="search">
-                <input type="text" id="searchText"/>
-                <input type="submit" id="SearchButton" value="SearchButton"/>
-            </form>
+        <div class="popup-Content">
+            <table>
+                <tr>
+                    <td>
+                        <p>Deneme1</p>
+                    </td>
+                    <td>
+                        <p>deneme2</p>
+                    </td>
+                </tr>
+            </table>
         </div>
 
     </div>
+    <div id="headerSearch">
+        <div id="search">
 
-</div>
-<!--<script type="text/javascript">
-    
-    //      document.querySelector('.searchbox [type="reset"]').addEventListener('click', function () {
-           
-    //      this.parentNode.querySelector('input').focus();
-    //});
-</script>-->
+            <!--<div class="box">
+
+                <div class="container">
+                    <form id="search">
+                        <input type="text" id="searchText"/>
+                        <input type="submit" id="SearchButton" value="SearchButton"/>
+                    </form>
+                </div>
+
+            </div>-->
+
+            <form>
+                <div class="input-group">
+                    <input type="text" id="searchText" class="form-control" placeholder="Search">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="SearchButton" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div class="container">
+        <div id="rightMenu">
+            <select class="form-control" id="myIller" data-style="btn-success">
+                <option>İller</option>
+
+            </select>
+            <br />
+            <select class="form-control" id="myIlceler" data-style="btn-success">
+                <option>İlçeler</option>
+
+            </select>
+            <br />
+            <select class="form-control" id="myMahalle" data-style="btn-success">
+                <option>Mahalleler</option>
+
+            </select>
+        </div>
+        <div id="rightMenu">
+
+        </div>
+    </div>
+
+
+
 </body>
 </html>

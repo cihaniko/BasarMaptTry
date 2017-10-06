@@ -2,13 +2,182 @@
 <html>
 <head>
     <title></title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="src/jquery-1.9.1.js"></script>
     <script src="src/jquery-1.9.1.min.js"></script>
-
+    <script src="src/bootstrap.js"></script>
     <script src="src/bootstrap.min.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+    <script src="src/leaflet.js"></script>
+    <script src="src/leaflet.toolbar.js"></script>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>-->
+    <link href="src/Leaflet.draw-master/Leaflet.draw-master/src/leaflet.draw.css" rel="stylesheet" />
+
+    <!--<link href="src/leaflet.draw.css" rel="stylesheet" />-->
+    <link href="src/leaflet.css" rel="stylesheet" />
+    <link href="src/style.css" rel="stylesheet" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.1.0/dist/leaflet.markercluster.js"></script>
+    <script src="src/leaflet.draw.js"></script>
+
 
 </head>
 <body>
 
+    <div id="map">
+        <script>
+
+        var map = L.map('map').setView([40.65147, 29.25663], 7);
+        var basarLayer = new L.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "&copy; <a href='http://www.basarsoft.com.tr'>Başarsoft</a> contributors",
+            maxZoom: 30
+        }).addTo(map);
+        var featureGroup = new L.FeatureGroup();
+        featureGroup.addTo(map);
+        var editableLayers = new L.FeatureGroup();
+        map.addLayer(editableLayers);
+
+        drawnItems = L.featureGroup().addTo(map);
+        L.control.layers({
+            'BaşarLayer': basarLayer.addTo(map),
+            "google": L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
+                attribution: 'google'
+            })
+        }, { 'drawlayer': drawnItems }, { position: 'topright', collapsed: false }).addTo(map);
+
+
+        map.addControl(new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems,
+                poly: {
+                    allowIntersection: false
+                }
+            },
+            draw: {
+                polygon: {
+                    allowIntersection: true,
+                    showArea: true
+                },
+                polyline: false
+            }
+        }));
+        map.on(L.Draw.Event.CREATED, function(event) {
+            var layer = event.layer;
+            drawnItems.addLayer(layer);
+            collection = drawnItems.toGeoJSON();
+            console.log(collection);
+        });
+
+        scotland = L.polygon([[[60, -13], [60, 0], [50, 4], [50, -13]],
+                  [[55.7, -4.5], [56, -4.5], [56, -4], [55.7, -4]]]);
+        console.log(scotland);
+        scotland.addTo(map);
+        var denemegeo = scotland.toGeoJSON();
+        console.log(denemegeo);
+
+//map.on('draw:created', function (e) {
+        //    dizi = new Array();
+        //    collection = drawnItems.toGeoJSON();
+
+
+//    console.log(collection);
+        //});
+        //map.on('draw:editing', function (e) {
+        //    var collection2 = drawnItems.toGeoJSON();
+        //    console.log(collection2);
+
+        //});
+
+        //var markers = L.markerClusterGroup();
+        //markers.addLayer(L.marker(getRandomLatLng(map)));
+        ////... Add more layers ...
+        //map.addLayer(markers);
+
+        function renk() {
+            var renkli = { color: 'blue' }
+            return renkli;
+        }
+
+        $('document').ready(function() {
+            $.ajax({
+                url: '../api/Iller/GetDenemeGeo',
+                type: 'GET',
+                dataType: 'json',
+                data: { sehir: "Central Harlem North-Polo Grounds" },
+                success: function(data, textStatus, xhr) {
+                    console.log(data);
+
+                    //ilcoord = data.Geo.coordinates;
+
+
+                    var yenicord = [];
+                    if (data.geometry.type == "MultiPolygon") {
+                        for (var i = 0; i < data.geometry.coordinates.length; i++) {
+
+                            for (var j = 0; j < data.geometry.coordinates[i].length; j++) {
+                                var mPolygon = [];
+                                for (var k = 0; k < data.geometry.coordinates[i][j].length; k++) {
+                                    var a = data.geometry.coordinates[i][j][k].reverse();
+                                    mPolygon.push(a);
+                                }
+                                yenicord.push(mPolygon.slice(0));
+                            }
+                            nPolygon = L.polygon(yenicord, {
+                                color: 'red'
+
+
+                            }).bindPopup("merhaba mahalle"
+                            );
+
+
+                        }
+                    } else if (data.geometry.type == "Polygon") {
+                        var mPolygon = [];
+                        for (var i = 0; i < data.geometry.coordinates.length; i++) {
+
+                            for (var j = 0; j < data.geometry.coordinates[i].length; j++) {
+
+
+                                var a = data.geometry.coordinates[i][j].reverse();
+                                mPolygon.push(a);
+
+                                yenicord.push(mPolygon);
+                            }
+                            nPolygon = L.polygon(yenicord, renk()).bindPopup("merhabaaa"
+                            );
+
+
+                        }
+                    }
+
+                    //var setlat = data.geometry.coordinates[0][0][0];
+                    //var setlng = data.geometry.coordinates[0][0][1];
+
+                    //map.setView(new L.LatLng(setlat, setlng), 11);
+                    var bounds = nPolygon.getBounds();
+                    map.fitBounds(bounds);
+                    featureGroup.addLayer(nPolygon);
+
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log('Error lan Error' + xhr + errorThrown);
+                    swal(
+                        'Oops...',
+                        'Malesef Böyle bir mahalle yok ! ' + xhr,
+                        'error'
+                    );
+                }
+
+            });
+
+
+        });
+
+
+        </script>
+    </div>
 </body>
 </html>
